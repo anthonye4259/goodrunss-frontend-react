@@ -1,0 +1,2454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GOODRUNSS - Sports Tech Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-navy': '#102037',
+                        'brand-blue': '#5271ff',
+                        'brand-gray': '#555555',
+                        'brand-purple': '#31087b',
+                        'brand-lime': '#7ed957',
+                        'brand-green': '#00ff88',
+                        'brand-dark': '#0a0a0a',
+                        'brand-light': '#f8f9fa'
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                        'display': ['Space Grotesk', 'system-ui', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #102037 100%);
+            min-height: 100vh;
+        }
+        
+        /* Custom GOODRUNSS Logo Styling */
+        .goodrunss-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #00ff88 0%, #7ed957 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .goodrunss-logo-solid {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        
+        /* Custom Brand Colors */
+        .brand-gradient {
+            background: linear-gradient(135deg, #00ff88 0%, #7ed957 100%);
+        }
+        
+        .brand-gradient-text {
+            background: linear-gradient(135deg, #00ff88 0%, #7ed957 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .brand-card {
+            background: linear-gradient(145deg, #102037 0%, #0a0a0a 100%);
+            border: 1px solid rgba(0, 255, 136, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .brand-card:hover {
+            border-color: rgba(0, 255, 136, 0.3);
+            box-shadow: 0 12px 48px rgba(0, 255, 136, 0.1);
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+        
+        /* Custom Slider */
+        .slider::-webkit-slider-thumb {
+            appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00ff88 0%, #7ed957 100%);
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3);
+        }
+        .slider::-moz-range-thumb {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00ff88 0%, #7ed957 100%);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3);
+        }
+        
+        /* Custom Animations */
+        @keyframes brandPulse {
+            0%, 100% { 
+                opacity: 1; 
+                box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7);
+            }
+            50% { 
+                opacity: 0.8; 
+                box-shadow: 0 0 0 10px rgba(0, 255, 136, 0);
+            }
+        }
+        
+        @keyframes slideInBrand {
+            from { 
+                transform: translateX(-100%) scale(0.9); 
+                opacity: 0; 
+            }
+            to { 
+                transform: translateX(0) scale(1); 
+                opacity: 1; 
+            }
+        }
+        
+        @keyframes fadeInBrand {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes brandBounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-8px); }
+            60% { transform: translateY(-4px); }
+        }
+        
+        @keyframes brandGlow {
+            0%, 100% { 
+                box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+            }
+            50% { 
+                box-shadow: 0 0 40px rgba(0, 255, 136, 0.4);
+            }
+        }
+        
+        .animate-brand-pulse {
+            animation: brandPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        .animate-slide-in-brand {
+            animation: slideInBrand 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .animate-fade-in-brand {
+            animation: fadeInBrand 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .animate-brand-bounce {
+            animation: brandBounce 1.2s infinite;
+        }
+        
+        .animate-brand-glow {
+            animation: brandGlow 3s ease-in-out infinite;
+        }
+        
+        /* Enhanced Hover Effects */
+        .hover-brand-scale:hover {
+            transform: scale(1.03) translateY(-2px);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .hover-brand-glow:hover {
+            box-shadow: 0 8px 32px rgba(0, 255, 136, 0.2);
+            border-color: rgba(0, 255, 136, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        /* Custom Loading States */
+        .brand-loading {
+            background: linear-gradient(90deg, #102037 25%, #5271ff 50%, #102037 75%);
+            background-size: 200% 100%;
+            animation: brandLoading 2s infinite;
+        }
+        
+        @keyframes brandLoading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        /* Custom Button Styles */
+        .brand-button {
+            background: linear-gradient(135deg, #00ff88 0%, #7ed957 100%);
+            color: #0a0a0a;
+            font-weight: 600;
+            letter-spacing: 0.025em;
+            box-shadow: 0 4px 16px rgba(0, 255, 136, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .brand-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 255, 136, 0.4);
+        }
+        
+        .brand-button-secondary {
+            background: linear-gradient(145deg, #102037 0%, #0a0a0a 100%);
+            color: #00ff88;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .brand-button-secondary:hover {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: rgba(0, 255, 136, 0.6);
+        }
+        
+        /* Custom Card Styles */
+        .brand-card-enhanced {
+            background: linear-gradient(145deg, #102037 0%, #0a0a0a 100%);
+            border: 1px solid rgba(0, 255, 136, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .brand-card-enhanced:hover {
+            border-color: rgba(0, 255, 136, 0.3);
+            box-shadow: 0 16px 48px rgba(0, 255, 136, 0.15);
+            transform: translateY(-4px);
+        }
+        
+        /* Custom Progress Bars */
+        .brand-progress {
+            background: linear-gradient(90deg, #00ff88 0%, #7ed957 100%);
+            box-shadow: 0 2px 8px rgba(0, 255, 136, 0.3);
+        }
+        
+        /* Custom Text Styles */
+        .brand-heading {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #ffffff 0%, #00ff88 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .brand-subheading {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            color: #00ff88;
+        }
+    </style>
+</head>
+<body class="bg-black text-white">
+    <div id="app">
+        <!-- Navigation -->
+        <div class="bg-gradient-to-r from-brand-navy to-brand-dark border-b border-brand-green/20 p-6">
+            <div class="flex justify-between items-center mb-6">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 brand-gradient rounded-xl flex items-center justify-center animate-brand-glow">
+                        <span class="text-brand-dark font-bold text-xl font-display">GR</span>
+                    </div>
+                    <h1 class="goodrunss-logo text-2xl">GOODRUNSS</h1>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="setViewMode('mobile')" 
+                            class="brand-button px-6 py-3 rounded-xl font-semibold">
+                        📱 Mobile App
+                    </button>
+                    <button onclick="setViewMode('dashboard')" 
+                            class="brand-button-secondary px-6 py-3 rounded-xl font-semibold">
+                        💻 Team Performance
+                    </button>
+                    <button onclick="setViewMode('gia-agents')" 
+                            class="brand-button-secondary px-6 py-3 rounded-xl font-semibold">
+                        🤖 GIA Agents
+                    </button>
+                    <button onclick="setViewMode('player-details')" 
+                            class="brand-button-secondary px-6 py-3 rounded-xl font-semibold">
+                        👤 Player Details
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Screen Selector -->
+            <div id="mobileSelector" class="flex flex-wrap gap-3 justify-center">
+                <button data-screen="playgrid" 
+                        class="brand-button px-4 py-2 rounded-xl text-sm font-semibold hover-brand-scale">
+                    🏀 Court Discovery
+                </button>
+                <button data-screen="performance" 
+                        class="brand-button-secondary px-4 py-2 rounded-xl text-sm font-semibold hover-brand-scale">
+                    📊 Sports Performance
+                </button>
+                <button data-screen="profile" 
+                        class="brand-button-secondary px-4 py-2 rounded-xl text-sm font-semibold hover-brand-scale">
+                    👤 User Profile
+                </button>
+                <button data-screen="checkin" 
+                        class="brand-button-secondary px-4 py-2 rounded-xl text-sm font-semibold hover-brand-scale">
+                    ✅ Check In
+                </button>
+                <button data-screen="courtdetails" 
+                        class="brand-button-secondary px-4 py-2 rounded-xl text-sm font-semibold hover-brand-scale">
+                    🏟️ Court Details
+                </button>
+                <button data-screen="create" 
+                        class="brand-button-secondary px-4 py-2 rounded-xl text-sm font-semibold hover-brand-scale">
+                    🎯 Community/Create
+                </button>
+                <button data-screen="leaderboard" 
+                        class="brand-button-secondary px-4 py-2 rounded-xl text-sm font-semibold hover-brand-scale">
+                    🏆 Leaderboard
+                </button>
+                <button data-screen="stream" 
+                        class="brand-button-secondary px-4 py-2 rounded-xl text-sm font-semibold hover-brand-scale">
+                    📹 Stream & Share
+                </button>
+                <button data-screen="tracker" 
+                        class="brand-button-secondary px-4 py-2 rounded-xl text-sm font-semibold hover-brand-scale">
+                    📈 Runss Tracker
+                </button>
+                <button data-screen="create-group" 
+                        class="brand-button-secondary px-4 py-2 rounded-xl text-sm font-semibold hover-brand-scale">
+                    👥 Create Group
+                </button>
+                <button data-screen="ads" 
+                        class="brand-button-secondary px-4 py-2 rounded-xl text-sm font-semibold hover-brand-scale">
+                    📢 Brand Ads
+                </button>
+                <button data-screen="gia" 
+                        class="brand-button-secondary px-4 py-2 rounded-xl text-sm font-semibold hover-brand-scale">
+                    🤖 GIA Assistant
+                </button>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div id="content"></div>
+    </div>
+
+    <script>
+        let currentView = 'mobile';
+        let currentScreen = 'playgrid';
+
+        function setViewMode(mode) {
+            currentView = mode;
+            updateContent();
+            updateButtons();
+        }
+
+        function setCurrentScreen(screen) {
+            currentScreen = screen;
+            updateContent();
+            updateButtons();
+        }
+
+        function updateButtons() {
+            const buttons = document.querySelectorAll('#mobileSelector button');
+            buttons.forEach(btn => {
+                btn.className = 'brand-button-secondary px-4 py-2 rounded-xl text-sm font-semibold hover-brand-scale';
+            });
+            
+            const activeBtn = document.querySelector(`button[data-screen="${currentScreen}"]`);
+            if (activeBtn) {
+                activeBtn.className = 'brand-button px-4 py-2 rounded-xl text-sm font-semibold hover-brand-scale';
+            }
+        }
+
+        function addEventListeners() {
+            // Add click listeners to mobile selector buttons
+            const mobileButtons = document.querySelectorAll('#mobileSelector button');
+            mobileButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const screen = this.getAttribute('data-screen');
+                    setCurrentScreen(screen);
+                });
+            });
+        }
+
+        function updateContent() {
+            const content = document.getElementById('content');
+            
+            if (currentView === 'dashboard') {
+                content.innerHTML = getDashboardHTML();
+            } else if (currentView === 'gia-agents') {
+                content.innerHTML = getGIAAgentsHTML();
+            } else if (currentView === 'player-details') {
+                content.innerHTML = getPlayerDetailsHTML();
+            } else {
+                content.innerHTML = getMobileHTML();
+            }
+        }
+
+        function getDashboardHTML() {
+            return `
+                <div class="flex min-h-screen">
+                    <!-- Sidebar -->
+                    <div class="w-64 bg-gray-900 border-r border-gray-800 flex flex-col">
+                        <div class="p-6 border-b border-gray-800">
+                            <div class="flex items-center gap-2 mb-2">
+                                <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                                    <span class="text-black font-bold text-sm">GR</span>
+                                </div>
+                                <span class="text-white font-bold text-sm">GOODRUNSS MANAGER</span>
+                            </div>
+                        </div>
+                        <nav class="flex-1 p-4">
+                            <ul class="space-y-2">
+                                <li><button class="w-full flex items-center gap-3 px-3 py-2 rounded-lg bg-primary-green text-black"><span class="text-lg">🏠</span><span class="font-medium">HOME</span></button></li>
+                                <li><button class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800"><span class="text-lg">📅</span><span class="font-medium">BOOKINGS</span></button></li>
+                                <li><button class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800"><span class="text-lg">📍</span><span class="font-medium">FACILITIES</span></button></li>
+                                <li><button class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800"><span class="text-lg">🤖</span><span class="font-medium">G.I.A</span></button></li>
+                                <li><button class="w-full flex items-center gap-3 px-3 py-2 rounded-lg bg-primary-green text-black"><span class="text-lg">📊</span><span class="font-medium">PERFORMANCE</span></button></li>
+                                <li><button class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800"><span class="text-lg">📢</span><span class="font-medium">MARKETING</span></button></li>
+                                <li><button class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800"><span class="text-lg">⚙️</span><span class="font-medium">SETTINGS</span></button></li>
+                            </ul>
+                        </nav>
+                    </div>
+
+                    <!-- Main Content -->
+                    <div class="flex-1 bg-black text-white p-6">
+                        <!-- Header -->
+                        <div class="flex justify-between items-center mb-6">
+                            <h1 class="text-2xl font-bold">YOUR TEAMS PERFORMANCE</h1>
+                            <div class="flex items-center gap-4">
+                                <button class="text-white hover:text-primary-green transition-colors">🔔</button>
+                                <button class="text-white hover:text-primary-green transition-colors">💬</button>
+                                <button class="text-white hover:text-primary-green transition-colors">HELP</button>
+                                <button class="text-white hover:text-primary-green transition-colors">LOG OUT</button>
+                            </div>
+                        </div>
+
+                        <!-- KPIs Row -->
+                        <div class="grid grid-cols-3 gap-6 mb-6">
+                            <!-- Avg Performance Score -->
+                            <div class="bg-gray-800 rounded-lg p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-semibold">Avg Performance Score</h3>
+                                    <div class="flex items-center gap-1">
+                                        <span class="text-green-400">↗</span>
+                                        <span class="text-green-400 text-sm">+13.8%</span>
+                                    </div>
+                                </div>
+                                <div class="text-3xl font-bold text-white mb-2">90%</div>
+                                <div class="flex items-end justify-between h-12">
+                                    <div class="w-3 bg-gray-600 h-6"></div>
+                                    <div class="w-3 bg-gray-600 h-8"></div>
+                                    <div class="w-3 bg-gray-600 h-10"></div>
+                                    <div class="w-3 bg-primary-green h-12"></div>
+                                </div>
+                            </div>
+
+                            <!-- Fatigue Index -->
+                            <div class="bg-gray-800 rounded-lg p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-semibold">Fatigue Index</h3>
+                                    <div class="flex items-center gap-1">
+                                        <span class="text-green-400">↗</span>
+                                        <span class="text-green-400 text-sm">↑ 13.8%</span>
+                                    </div>
+                                </div>
+                                <div class="text-3xl font-bold text-white mb-2">24</div>
+                                <div class="flex items-end justify-between h-12">
+                                    <div class="w-3 bg-gray-600 h-4"></div>
+                                    <div class="w-3 bg-gray-600 h-6"></div>
+                                    <div class="w-3 bg-gray-600 h-8"></div>
+                                    <div class="w-3 bg-primary-green h-10"></div>
+                                </div>
+                            </div>
+
+                            <!-- Attendance -->
+                            <div class="bg-gray-800 rounded-lg p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-semibold">Attendance</h3>
+                                    <div class="flex items-center gap-1">
+                                        <span class="text-red-400">↘</span>
+                                        <span class="text-red-400 text-sm">↓ 13.8%</span>
+                                    </div>
+                                </div>
+                                <div class="text-3xl font-bold text-white mb-2">95%</div>
+                                <div class="flex items-end justify-between h-12">
+                                    <div class="w-3 bg-gray-600 h-8"></div>
+                                    <div class="w-3 bg-gray-600 h-10"></div>
+                                    <div class="w-3 bg-gray-600 h-6"></div>
+                                    <div class="w-3 bg-red-400 h-4"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Team Statistics Chart -->
+                        <div class="bg-gray-800 rounded-lg p-6 mb-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-lg font-semibold">Team Statistics</h3>
+                                <select class="bg-gray-700 text-white px-3 py-1 rounded">
+                                    <option>Last 6 months</option>
+                                    <option>Last 3 months</option>
+                                    <option>Last month</option>
+                                </select>
+                            </div>
+                            <div class="h-64 bg-gray-700 rounded-lg p-4">
+                                <div class="relative h-full">
+                                    <!-- Y-axis labels -->
+                                    <div class="absolute left-0 top-0 text-xs text-gray-400">200</div>
+                                    <div class="absolute left-0 top-1/4 text-xs text-gray-400">150</div>
+                                    <div class="absolute left-0 top-1/2 text-xs text-gray-400">100</div>
+                                    <div class="absolute left-0 top-3/4 text-xs text-gray-400">50</div>
+                                    <div class="absolute left-0 bottom-0 text-xs text-gray-400">0</div>
+                                    
+                                    <!-- Chart lines -->
+                                    <div class="absolute inset-4">
+                                        <div class="relative h-full">
+                                            <!-- Light blue line -->
+                                            <div class="absolute top-1/2 left-0 w-full h-1 bg-blue-400 opacity-60 rounded-full"></div>
+                                            <!-- Green line -->
+                                            <div class="absolute top-1/3 left-0 w-full h-1 bg-primary-green opacity-60 rounded-full"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- X-axis labels -->
+                                    <div class="absolute bottom-0 left-8 text-xs text-gray-400">Jan</div>
+                                    <div class="absolute bottom-0 left-1/4 text-xs text-gray-400">Feb</div>
+                                    <div class="absolute bottom-0 left-1/2 text-xs text-gray-400">Mar</div>
+                                    <div class="absolute bottom-0 left-3/4 text-xs text-gray-400">Apr</div>
+                                    <div class="absolute bottom-0 right-1/4 text-xs text-gray-400">May</div>
+                                    <div class="absolute bottom-0 right-8 text-xs text-gray-400">Jun</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Players Table -->
+                        <div class="bg-gray-800 rounded-lg p-6 mb-6">
+                            <h3 class="text-lg font-semibold mb-4">PLAYERS</h3>
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead>
+                                        <tr class="border-b border-gray-700">
+                                            <th class="text-left py-3 px-4 text-gray-400">NAME</th>
+                                            <th class="text-left py-3 px-4 text-gray-400">POSITION</th>
+                                            <th class="text-left py-3 px-4 text-gray-400">ATTENDANCE</th>
+                                            <th class="text-left py-3 px-4 text-gray-400">AVG</th>
+                                            <th class="text-left py-3 px-4 text-gray-400">S/W</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-b border-gray-700">
+                                            <td class="py-3 px-4 text-white">K. AVANT</td>
+                                            <td class="py-3 px-4 text-gray-400">ST</td>
+                                            <td class="py-3 px-4 text-gray-400">000</td>
+                                            <td class="py-3 px-4 text-gray-400">43%</td>
+                                            <td class="py-3 px-4 text-gray-400">Batting</td>
+                                        </tr>
+                                        <tr class="border-b border-gray-700">
+                                            <td class="py-3 px-4 text-white">J. BROWN</td>
+                                            <td class="py-3 px-4 text-gray-400">SS</td>
+                                            <td class="py-3 px-4 text-gray-400">000</td>
+                                            <td class="py-3 px-4 text-gray-400">32%</td>
+                                            <td class="py-3 px-4 text-gray-400">Batting</td>
+                                        </tr>
+                                        <tr class="border-b border-gray-700">
+                                            <td class="py-3 px-4 text-white">H. JAMES</td>
+                                            <td class="py-3 px-4 text-gray-400">OT</td>
+                                            <td class="py-3 px-4 text-gray-400">000</td>
+                                            <td class="py-3 px-4 text-gray-400">28%</td>
+                                            <td class="py-3 px-4 text-gray-400">Targets</td>
+                                        </tr>
+                                        <tr class="border-b border-gray-700">
+                                            <td class="py-3 px-4 text-white">C. RILEY</td>
+                                            <td class="py-3 px-4 text-gray-400">FR</td>
+                                            <td class="py-3 px-4 text-gray-400">000</td>
+                                            <td class="py-3 px-4 text-gray-400">24%</td>
+                                            <td class="py-3 px-4 text-gray-400">Speed</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-3 px-4 text-white">A. BRADY</td>
+                                            <td class="py-3 px-4 text-gray-400">WR</td>
+                                            <td class="py-3 px-4 text-gray-400">000</td>
+                                            <td class="py-3 px-4 text-gray-400">20%</td>
+                                            <td class="py-3 px-4 text-gray-400">Speed</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="mt-4">
+                                <button class="text-primary-green hover:text-secondary-green text-sm">Show Full Roster</button>
+                            </div>
+                        </div>
+
+                        <!-- Team Alerts -->
+                        <div class="bg-gray-800 rounded-lg p-6">
+                            <h3 class="text-lg font-semibold mb-4">TEAM ALERTS</h3>
+                            <div class="space-y-3">
+                                <div class="bg-red-900 border border-red-700 rounded-lg p-3">
+                                    <p class="text-red-200 text-sm">2 Players showing fatigue- light practice</p>
+                                </div>
+                                <div class="bg-yellow-900 border border-yellow-700 rounded-lg p-3">
+                                    <p class="text-yellow-200 text-sm">K. Avant 3 missed practices</p>
+                                </div>
+                                <div class="bg-gray-700 rounded-lg h-12"></div>
+                                <div class="bg-gray-700 rounded-lg h-12"></div>
+                            </div>
+                        </div>
+
+                        <!-- GIA Assistant Panel -->
+                        <div class="fixed right-6 top-6 w-80 bg-gray-900 border border-gray-800 rounded-lg p-4">
+                            <div class="flex items-center gap-2 mb-4">
+                                <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                                    <span class="text-black font-bold text-sm">GR</span>
+                                </div>
+                                <span class="text-lg font-bold text-primary-green">GOODRUNSS</span>
+                            </div>
+                            <div class="bg-gray-800 rounded-lg p-3 mb-4">
+                                <div class="text-sm text-gray-300">Hi ! It's <span class="text-primary-green">GIA</span> how may I assist you?</div>
+                            </div>
+                            <div class="flex gap-2">
+                                <input type="text" placeholder="DO YOU NEED A DRILL PLAN?" class="flex-1 bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-primary-green">
+                                <button class="bg-primary-green text-black p-2 rounded hover:bg-secondary-green transition-colors">🎤</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getGIAAgentsHTML() {
+            return `
+                <div class="flex min-h-screen">
+                    <!-- Sidebar -->
+                    <div class="w-64 bg-gray-900 border-r border-gray-800 flex flex-col">
+                        <div class="p-6 border-b border-gray-800">
+                            <div class="flex items-center gap-2 mb-2">
+                                <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                                    <span class="text-black font-bold text-sm">GR</span>
+                                </div>
+                                <span class="text-white font-bold text-sm">GOODRUNSS MANAGER</span>
+                            </div>
+                        </div>
+                        <nav class="flex-1 p-4">
+                            <ul class="space-y-2">
+                                <li><button class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800"><span class="text-lg">🏠</span><span class="font-medium">HOME</span></button></li>
+                                <li><button class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800"><span class="text-lg">📅</span><span class="font-medium">BOOKINGS</span></button></li>
+                                <li><button class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800"><span class="text-lg">📍</span><span class="font-medium">FACILITIES</span></button></li>
+                                <li><button class="w-full flex items-center gap-3 px-3 py-2 rounded-lg bg-primary-green text-black"><span class="text-lg">🤖</span><span class="font-medium">G.I.A</span></button></li>
+                                <li><button class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800"><span class="text-lg">📊</span><span class="font-medium">PERFORMANCE</span></button></li>
+                                <li><button class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800"><span class="text-lg">📢</span><span class="font-medium">MARKETING</span></button></li>
+                                <li><button class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800"><span class="text-lg">⚙️</span><span class="font-medium">SETTINGS</span></button></li>
+                            </ul>
+                        </nav>
+                    </div>
+
+                    <!-- Main Content -->
+                    <div class="flex-1 bg-black text-white p-6">
+                        <!-- Header -->
+                        <div class="flex justify-between items-center mb-6">
+                            <h1 class="text-2xl font-bold">GOODRUNSS INTELLIGENCE AGENTS</h1>
+                            <div class="flex items-center gap-4">
+                                <button class="text-white hover:text-primary-green transition-colors">🔔</button>
+                                <button class="text-white hover:text-primary-green transition-colors">💬</button>
+                                <button class="text-white hover:text-primary-green transition-colors">❓</button>
+                                <button class="text-white hover:text-primary-green transition-colors">HELP</button>
+                                <button class="text-white hover:text-primary-green transition-colors">LOG OUT</button>
+                            </div>
+                        </div>
+
+                        <!-- GIA Greeting -->
+                        <div class="mb-8">
+                            <h2 class="text-3xl font-bold mb-2">Hi ! It's <span class="text-primary-green">GIA</span></h2>
+                            <p class="text-gray-400 text-lg">💬 SHOULD WE RUN FACILITY OPS FOR YOU?</p>
+                        </div>
+
+                        <!-- Agent Cards Grid -->
+                        <div class="grid grid-cols-2 gap-6">
+                            <!-- Booking Agent -->
+                            <div class="bg-gray-800 rounded-lg p-6">
+                                <h3 class="text-xl font-bold text-primary-green mb-4">BOOKING AGENT</h3>
+                                <p class="text-gray-300 mb-6">Showing player feedback and frustration signals. To help everyone maintain good energy and fairness as well as promote top rated courts and communities.</p>
+                                <button class="text-primary-green hover:text-secondary-green font-medium">Manage →</button>
+                            </div>
+
+                            <!-- Facility Ops Agent -->
+                            <div class="bg-gray-800 rounded-lg p-6">
+                                <h3 class="text-xl font-bold text-primary-green mb-4">FACILITY OPS AGENT</h3>
+                                <p class="text-gray-300 mb-6">Showing player feedback and frustration signals. To help everyone maintain good energy and fairness as well as promote top rated courts and communities.</p>
+                                <button class="text-primary-green hover:text-secondary-green font-medium">Manage →</button>
+                            </div>
+
+                            <!-- Community Agent -->
+                            <div class="bg-gray-800 rounded-lg p-6">
+                                <h3 class="text-xl font-bold text-primary-green mb-4">COMMUNITY AGENT</h3>
+                                <p class="text-gray-300 mb-6">Showing player feedback and frustration signals. To help everyone maintain good energy and fairness as well as promote top rated courts and communities.</p>
+                                <button class="text-primary-green hover:text-secondary-green font-medium">Manage →</button>
+                            </div>
+
+                            <!-- Golf Agents -->
+                            <div class="bg-gray-800 rounded-lg p-6">
+                                <h3 class="text-xl font-bold text-primary-green mb-4">GOLF AGENTS</h3>
+                                <p class="text-gray-300 mb-6">Showing player feedback and frustration signals. To help everyone maintain good energy and fairness as well as promote top rated courts and communities.</p>
+                                <button class="text-primary-green hover:text-secondary-green font-medium">Manage →</button>
+                            </div>
+
+                            <!-- Revenue Agent -->
+                            <div class="bg-gray-800 rounded-lg p-6">
+                                <h3 class="text-xl font-bold text-primary-green mb-4">REVENUE AGENT</h3>
+                                <p class="text-gray-300 mb-6">Showing player feedback and frustration signals. To help everyone maintain good energy and fairness as well as promote top rated courts and communities.</p>
+                                <button class="text-primary-green hover:text-secondary-green font-medium">Manage →</button>
+                            </div>
+
+                            <!-- Runss Predict Agent -->
+                            <div class="bg-gray-800 rounded-lg p-6">
+                                <h3 class="text-xl font-bold text-primary-green mb-4">RUNSS PREDICT AGENT</h3>
+                                <p class="text-gray-300 mb-6">Showing player feedback and frustration signals. To help everyone maintain good energy and fairness as well as promote top rated courts and communities.</p>
+                                <button class="text-primary-green hover:text-secondary-green font-medium">Manage →</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getPlayerDetailsHTML() {
+            return `
+                <div class="flex min-h-screen">
+                    <!-- Sidebar -->
+                    <div class="w-64 bg-gray-900 border-r border-gray-800 flex flex-col">
+                        <div class="p-6 border-b border-gray-800">
+                            <div class="flex items-center gap-2 mb-2">
+                                <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                                    <span class="text-black font-bold text-sm">GR</span>
+                                </div>
+                                <span class="text-white font-bold text-sm">GOODRUNSS MANAGER</span>
+                            </div>
+                        </div>
+                        <nav class="flex-1 p-4">
+                            <ul class="space-y-2">
+                                <li><button class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800"><span class="text-lg">🏠</span><span class="font-medium">HOME</span></button></li>
+                                <li><button class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800"><span class="text-lg">📅</span><span class="font-medium">BOOKINGS</span></button></li>
+                                <li><button class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800"><span class="text-lg">📍</span><span class="font-medium">FACILITIES</span></button></li>
+                                <li><button class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800"><span class="text-lg">🤖</span><span class="font-medium">G.I.A</span></button></li>
+                                <li><button class="w-full flex items-center gap-3 px-3 py-2 rounded-lg bg-primary-green text-black"><span class="text-lg">📊</span><span class="font-medium">PERFORMANCE</span></button></li>
+                                <li><button class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800"><span class="text-lg">📢</span><span class="font-medium">MARKETING</span></button></li>
+                                <li><button class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800"><span class="text-lg">⚙️</span><span class="font-medium">SETTINGS</span></button></li>
+                            </ul>
+                        </nav>
+                    </div>
+
+                    <!-- Main Content -->
+                    <div class="flex-1 bg-black text-white p-6">
+                        <!-- Header -->
+                        <div class="flex justify-between items-center mb-6">
+                            <h1 class="text-2xl font-bold">PLAYER DETAILS</h1>
+                            <div class="flex items-center gap-4">
+                                <button class="text-white hover:text-primary-green transition-colors">🔔</button>
+                                <button class="text-white hover:text-primary-green transition-colors">💬</button>
+                                <button class="text-white hover:text-primary-green transition-colors">HELP</button>
+                                <button class="text-white hover:text-primary-green transition-colors">LOG OUT</button>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex gap-4 mb-6">
+                            <button class="border border-primary-green text-primary-green px-4 py-2 rounded-lg hover:bg-primary-green hover:text-black transition-colors">
+                                + Generate Practice Plan
+                            </button>
+                            <button class="bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors flex items-center gap-2">
+                                📥 Download Player PDF
+                            </button>
+                        </div>
+
+                        <!-- Player Info Card -->
+                        <div class="bg-gray-800 rounded-lg p-6 mb-6">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div class="relative">
+                                    <div class="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center">
+                                        <span class="text-2xl">👤</span>
+                                    </div>
+                                    <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-primary-green rounded-full flex items-center justify-center">
+                                        <span class="text-black text-xs">✓</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h2 class="text-2xl font-bold text-white">Jacob Brown</h2>
+                                    <p class="text-gray-400">GRA Sports Academy</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Sports -->
+                            <div class="flex gap-2 mb-4">
+                                <span class="px-3 py-1 bg-primary-green text-black rounded-full text-sm">🏀 Basketball</span>
+                                <span class="px-3 py-1 border border-white text-white rounded-full text-sm">🎾 Tennis</span>
+                                <span class="px-3 py-1 border border-white text-white rounded-full text-sm">⚾ Baseball</span>
+                            </div>
+                            
+                            <!-- Training Progress -->
+                            <div class="mb-2">
+                                <div class="w-full bg-gray-700 rounded-full h-3">
+                                    <div class="bg-primary-green h-3 rounded-full" style="width: 48%"></div>
+                                </div>
+                                <p class="text-white text-sm mt-1">THIS WEEKS TRAINING IS 48% COMPLETE</p>
+                            </div>
+                        </div>
+
+                        <!-- Performance Metrics -->
+                        <div class="grid grid-cols-3 gap-6 mb-6">
+                            <!-- Avg Performance Score -->
+                            <div class="bg-gray-800 rounded-lg p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-semibold">Avg Performance Score</h3>
+                                    <div class="flex items-center gap-1">
+                                        <span class="text-red-400">↘</span>
+                                        <span class="text-red-400 text-sm">↓ 13.8%</span>
+                                    </div>
+                                </div>
+                                <div class="text-3xl font-bold text-white mb-2">90%</div>
+                                <div class="flex items-end justify-between h-12">
+                                    <div class="w-3 bg-gray-600 h-6"></div>
+                                    <div class="w-3 bg-gray-600 h-8"></div>
+                                    <div class="w-3 bg-gray-600 h-10"></div>
+                                    <div class="w-3 bg-red-400 h-8"></div>
+                                </div>
+                            </div>
+
+                            <!-- Fatigue Index -->
+                            <div class="bg-gray-800 rounded-lg p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-semibold">Fatigue Index</h3>
+                                    <div class="flex items-center gap-1">
+                                        <span class="text-green-400">↗</span>
+                                        <span class="text-green-400 text-sm">↑ 13.8%</span>
+                                    </div>
+                                </div>
+                                <div class="text-3xl font-bold text-white mb-2">24</div>
+                                <div class="flex items-end justify-between h-12">
+                                    <div class="w-3 bg-gray-600 h-4"></div>
+                                    <div class="w-3 bg-gray-600 h-6"></div>
+                                    <div class="w-3 bg-gray-600 h-8"></div>
+                                    <div class="w-3 bg-primary-green h-10"></div>
+                                </div>
+                            </div>
+
+                            <!-- Attendance -->
+                            <div class="bg-gray-800 rounded-lg p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-semibold">Attendance</h3>
+                                    <div class="flex items-center gap-1">
+                                        <span class="text-red-400">↘</span>
+                                        <span class="text-red-400 text-sm">↓ 13.8%</span>
+                                    </div>
+                                </div>
+                                <div class="text-3xl font-bold text-white mb-2">95%</div>
+                                <div class="flex items-end justify-between h-12">
+                                    <div class="w-3 bg-gray-600 h-8"></div>
+                                    <div class="w-3 bg-gray-600 h-10"></div>
+                                    <div class="w-3 bg-gray-600 h-6"></div>
+                                    <div class="w-3 bg-red-400 h-4"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Performance Trends Chart -->
+                        <div class="bg-gray-800 rounded-lg p-6 mb-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-lg font-semibold">Performance Trends</h3>
+                                <select class="bg-gray-700 text-white px-3 py-1 rounded">
+                                    <option>Last 6 months</option>
+                                    <option>Last 3 months</option>
+                                    <option>Last month</option>
+                                </select>
+                            </div>
+                            <div class="h-64 bg-gray-700 rounded-lg p-4">
+                                <div class="relative h-full">
+                                    <!-- Y-axis labels -->
+                                    <div class="absolute left-0 top-0 text-xs text-gray-400">200</div>
+                                    <div class="absolute left-0 top-1/4 text-xs text-gray-400">150</div>
+                                    <div class="absolute left-0 top-1/2 text-xs text-gray-400">100</div>
+                                    <div class="absolute left-0 top-3/4 text-xs text-gray-400">50</div>
+                                    <div class="absolute left-0 bottom-0 text-xs text-gray-400">0</div>
+                                    
+                                    <!-- Chart lines -->
+                                    <div class="absolute inset-4">
+                                        <div class="relative h-full">
+                                            <!-- Light blue line -->
+                                            <div class="absolute top-1/2 left-0 w-full h-1 bg-blue-400 opacity-60 rounded-full"></div>
+                                            <!-- Green line -->
+                                            <div class="absolute top-1/3 left-0 w-full h-1 bg-primary-green opacity-60 rounded-full"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- X-axis labels -->
+                                    <div class="absolute bottom-0 left-8 text-xs text-gray-400">Jan</div>
+                                    <div class="absolute bottom-0 left-1/4 text-xs text-gray-400">Feb</div>
+                                    <div class="absolute bottom-0 left-1/2 text-xs text-gray-400">Mar</div>
+                                    <div class="absolute bottom-0 left-3/4 text-xs text-gray-400">Apr</div>
+                                    <div class="absolute bottom-0 right-1/4 text-xs text-gray-400">May</div>
+                                    <div class="absolute bottom-0 right-8 text-xs text-gray-400">Jun</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Additional Sections -->
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="bg-gray-800 rounded-lg p-6">
+                                <h3 class="text-lg font-semibold mb-4">COACH NOTES</h3>
+                                <div class="space-y-2">
+                                    <div class="bg-gray-700 rounded-lg h-12"></div>
+                                    <div class="bg-gray-700 rounded-lg h-12"></div>
+                                </div>
+                            </div>
+                            <div class="bg-gray-800 rounded-lg p-6">
+                                <h3 class="text-lg font-semibold mb-4">PLAYER DOCUMENTS</h3>
+                                <div class="space-y-2">
+                                    <div class="bg-gray-700 rounded-lg h-12"></div>
+                                    <div class="bg-gray-700 rounded-lg h-12"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- GIA Assistant Panel -->
+                        <div class="fixed right-6 top-6 w-80 bg-gray-900 border border-gray-800 rounded-lg p-4">
+                            <div class="flex items-center gap-2 mb-4">
+                                <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                                    <span class="text-black font-bold text-sm">GR</span>
+                                </div>
+                                <span class="text-lg font-bold text-primary-green">GOODRUNSS</span>
+                            </div>
+                            <div class="bg-gray-800 rounded-lg p-3 mb-4">
+                                <div class="text-sm text-gray-300">Hi ! It's <span class="text-primary-green">GIA</span> how may I assist you?</div>
+                            </div>
+                            <div class="flex gap-2">
+                                <input type="text" placeholder="HOW CAN J. BROWN IMPROVE?" class="flex-1 bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-primary-green">
+                                <button class="bg-primary-green text-black p-2 rounded hover:bg-secondary-green transition-colors">🎤</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getMobileHTML() {
+            const screens = {
+                playgrid: getPlayGridHTML(),
+                performance: getPerformanceHTML(),
+                profile: getProfileHTML(),
+                checkin: getCheckInHTML(),
+                courtdetails: getCourtDetailsHTML(),
+                create: getCreateHTML(),
+                leaderboard: getLeaderboardHTML(),
+                stream: getStreamHTML(),
+                tracker: getTrackerHTML(),
+                'create-group': getCreateGroupHTML(),
+                ads: getAdsHTML(),
+                gia: getGIAHTML()
+            };
+            
+            return `
+                <div class="max-w-md mx-auto bg-black pb-20">
+                    ${screens[currentScreen]}
+                </div>
+            `;
+        }
+
+        function getLeaderboardHTML() {
+            return `
+                <div class="min-h-screen bg-black text-white pb-20">
+                    <!-- Header -->
+                    <div class="flex items-center justify-between px-4 py-3 bg-black border-b border-gray-800">
+                        <h1 class="text-white font-bold text-lg">GOODRUNSS FEATURED ATHLETES</h1>
+                        <div class="text-white text-sm font-mono">9:41</div>
+                    </div>
+                    
+                    <div class="px-4 py-6">
+                        <!-- Featured Athletes Grid -->
+                        <div class="mb-8">
+                            <h2 class="text-lg font-semibold mb-4">FEATURED ATHLETES</h2>
+                            <div class="grid grid-cols-3 gap-3">
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-gray-700 rounded-full mx-auto mb-2 flex items-center justify-center">
+                                        <span class="text-2xl">👤</span>
+                                    </div>
+                                    <div class="text-xs text-gray-400">Athlete 1</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-gray-700 rounded-full mx-auto mb-2 flex items-center justify-center">
+                                        <span class="text-2xl">👤</span>
+                                    </div>
+                                    <div class="text-xs text-gray-400">Athlete 2</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-gray-700 rounded-full mx-auto mb-2 flex items-center justify-center">
+                                        <span class="text-2xl">👤</span>
+                                    </div>
+                                    <div class="text-xs text-gray-400">Athlete 3</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-gray-700 rounded-full mx-auto mb-2 flex items-center justify-center">
+                                        <span class="text-2xl">👤</span>
+                                    </div>
+                                    <div class="text-xs text-gray-400">Athlete 4</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-gray-700 rounded-full mx-auto mb-2 flex items-center justify-center">
+                                        <span class="text-2xl">👤</span>
+                                    </div>
+                                    <div class="text-xs text-gray-400">Athlete 5</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-gray-700 rounded-full mx-auto mb-2 flex items-center justify-center">
+                                        <span class="text-2xl">👤</span>
+                                    </div>
+                                    <div class="text-xs text-gray-400">Athlete 6</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Leaderboard -->
+                        <div>
+                            <h2 class="text-lg font-semibold mb-4">LEADERBOARD</h2>
+                            <div class="space-y-3">
+                                <div class="bg-gray-800 rounded-lg p-4 flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 bg-primary-green rounded-full flex items-center justify-center">
+                                            <span class="text-black font-bold text-sm">1</span>
+                                        </div>
+                                        <div>
+                                            <div class="font-semibold text-white">JASON BROWN</div>
+                                            <div class="text-sm text-gray-400">NYC</div>
+                                        </div>
+                                    </div>
+                                    <div class="text-primary-green font-bold text-lg">105</div>
+                                </div>
+                                
+                                <div class="bg-gray-800 rounded-lg p-4 flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
+                                            <span class="text-white font-bold text-sm">2</span>
+                                        </div>
+                                        <div>
+                                            <div class="font-semibold text-white">REESE YAKOEL</div>
+                                            <div class="text-sm text-gray-400">ATL</div>
+                                        </div>
+                                    </div>
+                                    <div class="text-primary-green font-bold text-lg">95</div>
+                                </div>
+                                
+                                <div class="bg-gray-800 rounded-lg p-4 flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
+                                            <span class="text-white font-bold text-sm">3</span>
+                                        </div>
+                                        <div>
+                                            <div class="font-semibold text-white">KELSEY COSSE</div>
+                                            <div class="text-sm text-gray-400">PIT</div>
+                                        </div>
+                                    </div>
+                                    <div class="text-primary-green font-bold text-lg">85</div>
+                                </div>
+                                
+                                <div class="bg-gray-800 rounded-lg p-4 flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
+                                            <span class="text-white font-bold text-sm">4</span>
+                                        </div>
+                                        <div>
+                                            <div class="font-semibold text-white">MARCUS JOHNSON</div>
+                                            <div class="text-sm text-gray-400">SF</div>
+                                        </div>
+                                    </div>
+                                    <div class="text-primary-green font-bold text-lg">78</div>
+                                </div>
+                                
+                                <div class="bg-gray-800 rounded-lg p-4 flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
+                                            <span class="text-white font-bold text-sm">5</span>
+                                        </div>
+                                        <div>
+                                            <div class="font-semibold text-white">SARAH CHEN</div>
+                                            <div class="text-sm text-gray-400">LA</div>
+                                        </div>
+                                    </div>
+                                    <div class="text-primary-green font-bold text-lg">72</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Navigation -->
+                    <div class="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 px-4 py-2 z-50">
+                        <div class="flex justify-around items-center max-w-md mx-auto">
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">🏠</div>
+                                <span class="text-xs mt-1">Home</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">🕐</div>
+                                <span class="text-xs mt-1">History</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 scale-110">
+                                <div class="text-2xl font-bold text-primary-green">G</div>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">📅</div>
+                                <span class="text-xs mt-1">Calendar</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">👤</div>
+                                <span class="text-xs mt-1">Profile</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getStreamHTML() {
+            return `
+                <div class="min-h-screen bg-black text-white pb-20">
+                    <!-- Header -->
+                    <div class="flex items-center justify-between px-4 py-3 bg-black border-b border-gray-800">
+                        <button class="text-white hover:text-primary-green transition-colors">←</button>
+                        <h1 class="text-white font-bold text-lg">GOODRUNSS</h1>
+                        <button class="text-white hover:text-primary-green transition-colors">⚙️</button>
+                    </div>
+                    
+                    <div class="px-4 py-6">
+                        <!-- Camera Interface -->
+                        <div class="bg-gray-800 rounded-lg h-96 mb-6 relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="text-6xl mb-4">📹</div>
+                                    <div class="text-gray-400">Camera View</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Camera Controls -->
+                            <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+                                <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center">
+                                    <div class="w-16 h-16 bg-gray-800 rounded-full"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Mode Selector -->
+                            <div class="absolute bottom-20 left-1/2 transform -translate-x-1/2 flex gap-4">
+                                <button class="px-4 py-2 bg-gray-700 text-white rounded text-sm">PHOTO</button>
+                                <button class="px-4 py-2 bg-gray-700 text-white rounded text-sm">VIDEO</button>
+                                <button class="px-4 py-2 bg-primary-green text-black rounded text-sm font-medium">STREAM</button>
+                            </div>
+                            
+                            <!-- Side Controls -->
+                            <div class="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col gap-3">
+                                <button class="bg-gray-700 p-3 rounded text-white hover:bg-gray-600">📝</button>
+                                <button class="bg-gray-700 p-3 rounded text-white hover:bg-gray-600">🤚</button>
+                                <button class="bg-gray-700 p-3 rounded text-white hover:bg-gray-600">📖</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Stream Options -->
+                        <div class="space-y-3">
+                            <button class="w-full flex items-center gap-4 p-3 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors">
+                                <span class="text-2xl">📷</span>
+                                <span class="font-medium text-white">Add Text</span>
+                            </button>
+                            <button class="w-full flex items-center gap-4 p-3 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors">
+                                <span class="text-2xl">🤚</span>
+                                <span class="font-medium text-white">Hands-Free</span>
+                            </button>
+                            <button class="w-full flex items-center gap-4 p-3 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors">
+                                <span class="text-2xl">📖</span>
+                                <span class="font-medium text-white">Story Mode</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Navigation -->
+                    <div class="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 px-4 py-2 z-50">
+                        <div class="flex justify-around items-center max-w-md mx-auto">
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">🏠</div>
+                                <span class="text-xs mt-1">Home</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">🕐</div>
+                                <span class="text-xs mt-1">History</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 scale-110">
+                                <div class="text-2xl font-bold text-primary-green">G</div>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">📅</div>
+                                <span class="text-xs mt-1">Calendar</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">👤</div>
+                                <span class="text-xs mt-1">Profile</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getTrackerHTML() {
+            return `
+                <div class="min-h-screen bg-black text-white pb-20">
+                    <!-- Header -->
+                    <div class="flex items-center justify-between px-4 py-3 bg-black border-b border-gray-800">
+                        <h1 class="text-white font-bold text-lg">GOODRUNSS RUNSS TRACKER</h1>
+                        <div class="text-white text-sm font-mono">9:41</div>
+                    </div>
+                    
+                    <div class="px-4 py-6">
+                        <!-- Filter Buttons -->
+                        <div class="flex gap-2 mb-6">
+                            <button class="px-4 py-2 bg-primary-green text-black rounded-full text-sm font-medium">CITY</button>
+                            <button class="px-4 py-2 border border-white text-white rounded-full text-sm">SPORT</button>
+                        </div>
+
+                        <!-- Live Activity Feed -->
+                        <div>
+                            <h2 class="text-lg font-semibold mb-4">LIVE ACTIVITY</h2>
+                            <div class="space-y-4">
+                                <div class="bg-gray-800 rounded-lg p-4">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <div class="w-3 h-3 bg-primary-green rounded-full animate-pulse"></div>
+                                        <span class="text-primary-green text-sm font-medium">LIVE</span>
+                                    </div>
+                                    <p class="text-white">10 PLAYERS CHECKED IN @CMU</p>
+                                    <p class="text-gray-400 text-sm">2 minutes ago</p>
+                                </div>
+                                
+                                <div class="bg-gray-800 rounded-lg p-4">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <div class="w-3 h-3 bg-blue-400 rounded-full"></div>
+                                        <span class="text-blue-400 text-sm font-medium">CHECK-IN</span>
+                                    </div>
+                                    <p class="text-white">BLAZE checked in @SHADY</p>
+                                    <p class="text-gray-400 text-sm">5 minutes ago</p>
+                                </div>
+                                
+                                <div class="bg-gray-800 rounded-lg p-4">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                                        <span class="text-yellow-400 text-sm font-medium">ACHIEVEMENT</span>
+                                    </div>
+                                    <p class="text-white">JASON logged 5 RUNSS</p>
+                                    <p class="text-gray-400 text-sm">8 minutes ago</p>
+                                </div>
+                                
+                                <div class="bg-gray-800 rounded-lg p-4">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <div class="w-3 h-3 bg-purple-400 rounded-full"></div>
+                                        <span class="text-purple-400 text-sm font-medium">UPDATE</span>
+                                    </div>
+                                    <p class="text-white">KINGSLEY added courts</p>
+                                    <p class="text-gray-400 text-sm">12 minutes ago</p>
+                                </div>
+                                
+                                <div class="bg-gray-800 rounded-lg p-4">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <div class="w-3 h-3 bg-red-400 rounded-full"></div>
+                                        <span class="text-red-400 text-sm font-medium">ALERT</span>
+                                    </div>
+                                    <p class="text-white">[YOUR GROUP] STARTS IN 15 MIN</p>
+                                    <p class="text-gray-400 text-sm">15 minutes ago</p>
+                                </div>
+                                
+                                <div class="bg-gray-800 rounded-lg p-4">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+                                        <span class="text-green-400 text-sm font-medium">NEW</span>
+                                    </div>
+                                    <p class="text-white">NEW FACILITY NEAR YOU</p>
+                                    <p class="text-gray-400 text-sm">20 minutes ago</p>
+                                </div>
+                                
+                                <div class="bg-gray-800 rounded-lg p-4">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <div class="w-3 h-3 bg-blue-400 rounded-full"></div>
+                                        <span class="text-blue-400 text-sm font-medium">TREND</span>
+                                    </div>
+                                    <p class="text-white">@CMU COURTS TRAFFIC TREND</p>
+                                    <p class="text-gray-400 text-sm">25 minutes ago</p>
+                                </div>
+                            </div>
+                            
+                            <div class="text-center mt-6">
+                                <button class="text-primary-green hover:text-secondary-green text-sm underline">LOAD MORE</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Navigation -->
+                    <div class="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 px-4 py-2 z-50">
+                        <div class="flex justify-around items-center max-w-md mx-auto">
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">🏠</div>
+                                <span class="text-xs mt-1">Home</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">🕐</div>
+                                <span class="text-xs mt-1">History</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 scale-110">
+                                <div class="text-2xl font-bold text-primary-green">G</div>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">📅</div>
+                                <span class="text-xs mt-1">Calendar</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">👤</div>
+                                <span class="text-xs mt-1">Profile</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getCreateGroupHTML() {
+            return `
+                <div class="min-h-screen bg-black text-white pb-20">
+                    <!-- Header -->
+                    <div class="flex items-center justify-between px-4 py-3 bg-black border-b border-gray-800">
+                        <h1 class="text-white font-bold text-lg">CREATE GROUP</h1>
+                        <button class="bg-primary-green text-black px-4 py-2 rounded text-sm font-medium">CREATE</button>
+                    </div>
+                    
+                    <div class="px-4 py-6">
+                        <!-- Group Info -->
+                        <div class="mb-6">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center">
+                                    <span class="text-2xl">👥</span>
+                                </div>
+                                <div>
+                                    <input type="text" placeholder="Group Name" class="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-primary-green">
+                                    <p class="text-sm text-gray-400 mt-1">public</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-400 text-sm">Organize your run.</p>
+                        </div>
+
+                        <!-- Event Details -->
+                        <div class="bg-primary-green rounded-lg p-6 mb-6">
+                            <div class="mb-4">
+                                <input type="text" placeholder="ADD PLAYERS" class="w-full bg-white text-black rounded-lg px-3 py-2 placeholder-gray-600 focus:outline-none">
+                            </div>
+                            
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="block text-black text-sm font-medium mb-1">Date</label>
+                                    <input type="date" class="w-full bg-white text-black rounded-lg px-3 py-2 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-black text-sm font-medium mb-1">Time</label>
+                                    <input type="time" class="w-full bg-white text-black rounded-lg px-3 py-2 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-black text-sm font-medium mb-1">City</label>
+                                    <input type="text" placeholder="Enter city" class="w-full bg-white text-black rounded-lg px-3 py-2 placeholder-gray-600 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-black text-sm font-medium mb-1">Sport</label>
+                                    <select class="w-full bg-white text-black rounded-lg px-3 py-2 focus:outline-none">
+                                        <option>Select sport</option>
+                                        <option>Basketball</option>
+                                        <option>Tennis</option>
+                                        <option>Baseball</option>
+                                        <option>Golf</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-black text-sm font-medium mb-1">Age</label>
+                                    <select class="w-full bg-white text-black rounded-lg px-3 py-2 focus:outline-none">
+                                        <option>Select age range</option>
+                                        <option>18-25</option>
+                                        <option>26-35</option>
+                                        <option>36-45</option>
+                                        <option>45+</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6">
+                                <button class="w-full bg-black text-white px-4 py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors">
+                                    PICK YOUR COURT
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Navigation -->
+                    <div class="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 px-4 py-2 z-50">
+                        <div class="flex justify-around items-center max-w-md mx-auto">
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">🏠</div>
+                                <span class="text-xs mt-1">Home</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">🕐</div>
+                                <span class="text-xs mt-1">History</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 scale-110">
+                                <div class="text-2xl font-bold text-primary-green">G</div>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">📅</div>
+                                <span class="text-xs mt-1">Calendar</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">👤</div>
+                                <span class="text-xs mt-1">Profile</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getAdsHTML() {
+            return `
+                <div class="min-h-screen bg-black text-white pb-20">
+                    <!-- Header -->
+                    <div class="flex items-center justify-between px-4 py-3 bg-black border-b border-gray-800">
+                        <button class="text-white hover:text-primary-green transition-colors">←</button>
+                        <h1 class="text-white font-bold text-lg">GOODRUNSS</h1>
+                        <button class="text-white hover:text-primary-green transition-colors">⚙️</button>
+                    </div>
+                    
+                    <div class="px-4 py-6">
+                        <!-- Ad Space -->
+                        <div class="space-y-4">
+                            <div class="bg-gray-800 rounded-lg h-32 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="text-2xl mb-2">📢</div>
+                                    <div class="text-gray-400">AD</div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gray-800 rounded-lg h-32 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="text-2xl mb-2">📢</div>
+                                    <div class="text-gray-400">AD</div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gray-800 rounded-lg h-32 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="text-2xl mb-2">📢</div>
+                                    <div class="text-gray-400">AD</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Share Button -->
+                        <div class="mt-8">
+                            <button class="w-full bg-primary-green text-black px-6 py-3 text-lg font-medium rounded-lg hover:bg-secondary-green transition-colors">
+                                SHARE
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Navigation -->
+                    <div class="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 px-4 py-2 z-50">
+                        <div class="flex justify-around items-center max-w-md mx-auto">
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">🏠</div>
+                                <span class="text-xs mt-1">Home</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">🕐</div>
+                                <span class="text-xs mt-1">History</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 scale-110">
+                                <div class="text-2xl font-bold text-primary-green">G</div>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">📅</div>
+                                <span class="text-xs mt-1">Calendar</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">👤</div>
+                                <span class="text-xs mt-1">Profile</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getPerformanceHTML() {
+            return `
+                <div class="min-h-screen bg-black text-white pb-20">
+                    <!-- Header -->
+                    <div class="flex items-center justify-between px-4 py-3 bg-black border-b border-gray-800">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                                <span class="text-black font-bold text-sm">GR</span>
+                            </div>
+                            <h1 class="text-white font-bold text-lg">GOODRUNSS PERFORMANCE</h1>
+                        </div>
+                        <div class="text-white text-sm font-mono">9:41</div>
+                    </div>
+                    
+                    <div class="px-4 py-6">
+                        <!-- User Profile Section -->
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="relative">
+                                <div class="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center">
+                                    <span class="text-2xl">👤</span>
+                                </div>
+                                <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-primary-green rounded-full flex items-center justify-center">
+                                    <span class="text-black text-xs">✓</span>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <h2 class="text-xl font-bold text-white">Jacob Brown</h2>
+                                <p class="text-gray-400 text-sm">GRA Sports Academy</p>
+                            </div>
+                        </div>
+
+                        <!-- Sport Selection -->
+                        <div class="flex gap-2 mb-6">
+                            <button class="px-4 py-2 bg-primary-green text-black rounded-full text-sm font-medium">🏀 Basketball</button>
+                            <button class="px-4 py-2 border border-white text-white rounded-full text-sm">🎾 Tennis</button>
+                            <button class="px-4 py-2 border border-white text-white rounded-full text-sm">⚾ Baseball</button>
+                        </div>
+
+                        <!-- Training Progress -->
+                        <div class="mb-6">
+                            <div class="w-full bg-gray-700 rounded-full h-3 mb-2">
+                                <div class="bg-primary-green h-3 rounded-full" style="width: 48%"></div>
+                            </div>
+                            <p class="text-white text-sm">THIS WEEKS TRAINING IS 48% COMPLETE</p>
+                        </div>
+
+                        <!-- Stats Section -->
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold mb-4">STATS</h3>
+                            <div class="grid grid-cols-3 gap-4 mb-4">
+                                <div class="text-center">
+                                    <div class="relative w-20 h-20 mx-auto mb-2">
+                                        <div class="absolute inset-0 rounded-full border-4 border-gray-600"></div>
+                                        <div class="absolute inset-0 rounded-full border-4 border-primary-green" style="clip-path: polygon(50% 50%, 50% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%, 50% 0%)"></div>
+                                        <div class="absolute inset-0 flex items-center justify-center">
+                                            <span class="text-lg font-bold text-white">50%</span>
+                                        </div>
+                                    </div>
+                                    <p class="text-sm text-gray-400">Accuracy</p>
+                                </div>
+                                <div class="text-center">
+                                    <div class="relative w-20 h-20 mx-auto mb-2">
+                                        <div class="absolute inset-0 rounded-full border-4 border-gray-600"></div>
+                                        <div class="absolute inset-0 rounded-full border-4 border-primary-green" style="clip-path: polygon(50% 50%, 50% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%, 50% 0%)"></div>
+                                        <div class="absolute inset-0 flex items-center justify-center">
+                                            <span class="text-lg font-bold text-white">50%</span>
+                                        </div>
+                                    </div>
+                                    <p class="text-sm text-gray-400">Targets</p>
+                                </div>
+                                <div class="text-center">
+                                    <div class="relative w-20 h-20 mx-auto mb-2">
+                                        <div class="absolute inset-0 rounded-full border-4 border-gray-600"></div>
+                                        <div class="absolute inset-0 rounded-full border-4 border-primary-green" style="clip-path: polygon(50% 50%, 50% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%, 50% 0%)"></div>
+                                        <div class="absolute inset-0 flex items-center justify-center">
+                                            <span class="text-lg font-bold text-white">50%</span>
+                                        </div>
+                                    </div>
+                                    <p class="text-sm text-gray-400">Speed</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Bar Chart -->
+                            <div class="bg-gray-800 rounded-lg p-4">
+                                <div class="flex items-end justify-between h-20">
+                                    <div class="w-6 bg-blue-400 h-8"></div>
+                                    <div class="w-6 bg-primary-green h-12"></div>
+                                    <div class="w-6 bg-blue-400 h-16"></div>
+                                    <div class="w-6 bg-primary-green h-10"></div>
+                                    <div class="w-6 bg-blue-400 h-14"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Drills Section -->
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-semibold">DRILLS</h3>
+                                <button class="bg-primary-green text-black px-3 py-1 rounded-full text-sm">Record</button>
+                            </div>
+                            <div class="bg-gray-800 rounded-lg h-32 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="text-4xl mb-2">▶️</div>
+                                    <div class="text-sm text-gray-400">Video Player</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Practice Plans Section -->
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold mb-4">PRACTICE PLANS</h3>
+                            <div class="space-y-2">
+                                <div class="bg-gray-800 rounded-lg h-16 flex items-center justify-center">
+                                    <div class="text-gray-400">Practice Plan 1</div>
+                                </div>
+                                <div class="bg-gray-800 rounded-lg h-16 flex items-center justify-center">
+                                    <div class="text-gray-400">Practice Plan 2</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Floating Action Button -->
+                    <div class="fixed bottom-24 left-1/2 transform -translate-x-1/2">
+                        <button class="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center text-white text-xl font-bold">
+                            P
+                        </button>
+                    </div>
+
+                    <!-- Bottom Navigation -->
+                    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300 px-4 py-2 z-50">
+                        <div class="flex justify-around items-center max-w-md mx-auto">
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-600">
+                                <div class="text-2xl">🏠</div>
+                                <span class="text-xs mt-1">Home</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-600">
+                                <div class="text-2xl">📊</div>
+                                <span class="text-xs mt-1">Stats</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 scale-110">
+                                <div class="w-12 h-12 bg-primary-green rounded-full flex items-center justify-center">
+                                    <span class="text-white font-bold text-lg">G</span>
+                                </div>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-600">
+                                <div class="text-2xl">🎯</div>
+                                <span class="text-xs mt-1">Target</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-600">
+                                <div class="text-2xl">👤</div>
+                                <span class="text-xs mt-1">Profile</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getProfileHTML() {
+            return `
+                <div class="min-h-screen bg-black text-white pb-20">
+                    <!-- Header -->
+                    <div class="flex items-center justify-between px-4 py-3 bg-black border-b border-gray-800">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                                <span class="text-black font-bold text-sm">GR</span>
+                            </div>
+                            <h1 class="text-white font-bold text-lg">GOODRUNSS</h1>
+                        </div>
+                        <div class="text-white text-sm font-mono">9:41</div>
+                    </div>
+                    
+                    <div class="px-4 py-6">
+                        <!-- User Profile Section -->
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="relative">
+                                <div class="w-20 h-20 bg-gray-700 rounded-full flex items-center justify-center">
+                                    <span class="text-3xl">👤</span>
+                                </div>
+                                <div class="absolute -bottom-1 -right-1 w-8 h-8 bg-primary-green rounded-full flex items-center justify-center">
+                                    <span class="text-black text-sm">✓</span>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <h2 class="text-2xl font-bold text-white">Jacob Brown</h2>
+                                <p class="text-gray-400">Athlete</p>
+                                <div class="flex gap-2 mt-2">
+                                    <span class="px-3 py-1 border border-primary-green text-primary-green rounded-full text-sm">🏀 Basketball</span>
+                                    <span class="px-3 py-1 border border-primary-green text-primary-green rounded-full text-sm">🎾 Tennis</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Highlight Reels Section -->
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-semibold">HIGHLIGHT REELS</h3>
+                                <button class="w-8 h-8 bg-primary-green rounded-full flex items-center justify-center">
+                                    <span class="text-black text-lg">+</span>
+                                </button>
+                            </div>
+                            <div class="bg-gray-800 rounded-lg h-48 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="text-6xl mb-2">▶️</div>
+                                    <div class="text-sm text-gray-400">Video Player</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Stats Section -->
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold mb-4">STATS</h3>
+                            <div class="grid grid-cols-3 gap-4">
+                                <div class="text-center">
+                                    <div class="text-3xl font-bold text-white mb-1">50</div>
+                                    <div class="text-sm text-gray-400">Check-Ins</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-3xl font-bold text-white mb-1">50</div>
+                                    <div class="text-sm text-gray-400">Runss</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-3xl font-bold text-white mb-1">50</div>
+                                    <div class="text-sm text-gray-400">Streaks</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Groups Section -->
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold mb-4">GROUPS</h3>
+                            <div class="space-y-3">
+                                <div class="bg-gray-800 rounded-lg p-4">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h4 class="font-semibold text-white">HIGHMARK</h4>
+                                            <p class="text-sm text-gray-400">GYM BBALL</p>
+                                            <p class="text-sm text-gray-400">6 ON 6</p>
+                                            <p class="text-sm text-gray-400">THURSDAYS @8PM</p>
+                                        </div>
+                                        <button class="bg-primary-green text-black px-3 py-1 rounded text-sm">JOIN +</button>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-800 rounded-lg p-4">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h4 class="font-semibold text-white">CLAYCO REC</h4>
+                                            <p class="text-sm text-gray-400">BBALL</p>
+                                            <p class="text-sm text-gray-400">3X3</p>
+                                            <p class="text-sm text-gray-400">WEDNESDAYS @5PM</p>
+                                        </div>
+                                        <button class="bg-primary-green text-black px-3 py-1 rounded text-sm">JOIN +</button>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-800 rounded-lg p-4">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h4 class="font-semibold text-white">MANHATTAN</h4>
+                                            <p class="text-sm text-gray-400">GYM TENNIS</p>
+                                            <p class="text-sm text-gray-400">MATCHES</p>
+                                            <p class="text-sm text-gray-400">THURSDAYS @8AM</p>
+                                        </div>
+                                        <button class="bg-primary-green text-black px-3 py-1 rounded text-sm">JOIN +</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Challenges Section -->
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold mb-4">CHALLENGES</h3>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="bg-gray-800 rounded-lg h-20 flex items-center justify-center">
+                                    <div class="text-center">
+                                        <div class="text-2xl mb-1">🏆</div>
+                                        <div class="text-xs text-gray-400">Challenge 1</div>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-800 rounded-lg h-20 flex items-center justify-center">
+                                    <div class="text-center">
+                                        <div class="text-2xl mb-1">🏆</div>
+                                        <div class="text-xs text-gray-400">Challenge 2</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Navigation -->
+                    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300 px-4 py-2 z-50">
+                        <div class="flex justify-around items-center max-w-md mx-auto">
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-600">
+                                <div class="text-2xl">🏠</div>
+                                <span class="text-xs mt-1">Home</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-600">
+                                <div class="text-2xl">📅</div>
+                                <span class="text-xs mt-1">History</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 scale-110">
+                                <div class="w-12 h-12 bg-primary-green rounded-full flex items-center justify-center">
+                                    <span class="text-white font-bold text-lg">G</span>
+                                </div>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-600">
+                                <div class="text-2xl">📢</div>
+                                <span class="text-xs mt-1">Alerts</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-primary-green">
+                                <div class="text-2xl">👤</div>
+                                <span class="text-xs mt-1">Profile</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getPlayGridHTML() {
+            return `
+                <div class="min-h-screen bg-black text-white pb-20">
+                    <!-- Header -->
+                    <div class="flex items-center justify-between px-4 py-3 bg-black border-b border-gray-800">
+                        <h1 class="text-white font-bold text-lg">GOODRUNSS</h1>
+                        <div class="text-white text-sm font-mono">9:41</div>
+                    </div>
+                    
+                    <!-- Search Section -->
+                    <div class="px-4 py-4">
+                        <div class="relative">
+                            <input type="text" placeholder="Q SEARCH NEARBY COURTS" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-primary-green">
+                            <div class="absolute right-3 top-3">🔍</div>
+                        </div>
+                        <div class="mt-2 text-sm text-gray-400 flex items-center gap-2">
+                            📍 Games Located Near - New York, NY 10001
+                        </div>
+                        
+                        <!-- Sport Filters -->
+                        <div class="flex gap-2 mt-4 overflow-x-auto">
+                            <button class="px-4 py-2 bg-primary-green text-black rounded-full text-sm font-medium whitespace-nowrap">🏀 Basketball</button>
+                            <button class="px-4 py-2 border border-white text-white rounded-full text-sm whitespace-nowrap">🎾 Tennis</button>
+                            <button class="px-4 py-2 border border-white text-white rounded-full text-sm whitespace-nowrap">⛳ Golf</button>
+                            <button class="px-4 py-2 border border-white text-white rounded-full text-sm whitespace-nowrap">🏓 Pickleball</button>
+                            <button class="px-4 py-2 border border-white text-white rounded-full text-sm whitespace-nowrap">🏐 Volleyball</button>
+                        </div>
+                    </div>
+
+                    <!-- Map Section -->
+                    <div class="px-4 mb-4">
+                        <div class="bg-gray-800 rounded-lg h-64 relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-br from-gray-700 to-gray-900">
+                                <!-- Street names -->
+                                <div class="absolute top-8 left-4 text-xs text-white opacity-60">S Central Ave</div>
+                                <div class="absolute top-12 left-8 text-xs text-white opacity-60">E 14th St</div>
+                                <div class="absolute top-16 left-12 text-xs text-white opacity-60">E 15th St</div>
+                                <div class="absolute top-20 left-16 text-xs text-white opacity-60">E 17th St</div>
+                                <div class="absolute bottom-16 left-8 text-xs text-white opacity-60">E Washington Blvd</div>
+                                <div class="absolute bottom-12 left-12 text-xs text-white opacity-60">Hooper Ave</div>
+                                <div class="absolute bottom-8 left-16 text-xs text-white opacity-60">Santa Monica Fwy</div>
+                                
+                                <!-- Green highlighted areas -->
+                                <div class="absolute top-4 left-4 w-20 h-16 bg-primary-green opacity-30 rounded-lg"></div>
+                                <div class="absolute bottom-8 right-4 w-32 h-24 bg-primary-green opacity-30 rounded-lg"></div>
+                                
+                                <!-- Court pins -->
+                                <div class="absolute top-6 left-6 w-3 h-3 bg-primary-green rounded-full"></div>
+                                <div class="absolute top-10 right-8 w-3 h-3 bg-primary-green rounded-full"></div>
+                                <div class="absolute bottom-10 left-10 w-3 h-3 bg-primary-green rounded-full"></div>
+                                <div class="absolute bottom-6 right-6 w-3 h-3 bg-primary-green rounded-full"></div>
+                                
+                                <!-- Map controls -->
+                                <div class="absolute top-4 right-4 flex flex-col gap-2">
+                                    <button class="bg-gray-700 p-2 rounded text-white hover:bg-gray-600">🔄</button>
+                                    <button class="bg-gray-700 p-2 rounded text-white hover:bg-gray-600">🔍</button>
+                                    <button class="bg-gray-700 p-2 rounded text-white hover:bg-gray-600">📷</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Court Cards -->
+                    <div class="px-4">
+                        <h2 class="text-lg font-semibold mb-3">Nearby Courts</h2>
+                        <div class="space-y-3">
+                            <div class="bg-gray-800 rounded-lg p-3 mb-3">
+                                <div class="flex gap-3">
+                                    <div class="w-20 h-16 bg-gray-700 rounded flex items-center justify-center">🏀</div>
+                                    <div class="flex-1">
+                                        <h3 class="font-semibold text-white">Carnegie Mellon Court</h3>
+                                        <div class="text-sm text-gray-400 mt-1">
+                                            <div>3 km away • 25 minutes</div>
+                                            <div>25 reviews</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <button class="text-primary-green hover:text-secondary-green">→</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-gray-800 rounded-lg p-3 mb-3">
+                                <div class="flex gap-3">
+                                    <div class="w-20 h-16 bg-gray-700 rounded flex items-center justify-center">🏀</div>
+                                    <div class="flex-1">
+                                        <h3 class="font-semibold text-white">Southside Flats Court</h3>
+                                        <div class="text-sm text-gray-400 mt-1">
+                                            <div>8 km away • 75 minutes</div>
+                                            <div>15 reviews</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <button class="text-primary-green hover:text-secondary-green">→</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Navigation -->
+                    <div class="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 px-4 py-2 z-50">
+                        <div class="flex justify-around items-center max-w-md mx-auto">
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-primary-green">
+                                <div class="text-2xl">🏠</div>
+                                <span class="text-xs mt-1">Home</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">🕐</div>
+                                <span class="text-xs mt-1">History</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 scale-110">
+                                <div class="text-2xl font-bold text-primary-green">G</div>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">📅</div>
+                                <span class="text-xs mt-1">Calendar</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">👤</div>
+                                <span class="text-xs mt-1">Profile</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getCheckInHTML() {
+            return `
+                <div class="min-h-screen bg-black text-white pb-20">
+                    <!-- Header -->
+                    <div class="flex items-center justify-between px-4 py-3 bg-black border-b border-gray-800">
+                        <h1 class="text-white font-bold text-lg">GOODRUNSS</h1>
+                        <div class="text-white text-sm font-mono">9:41</div>
+                    </div>
+                    
+                    <div class="px-4 py-6">
+                        <h1 class="text-xl font-semibold mb-6">Hi ! Check in this court for GoodRunss</h1>
+
+                        <!-- Court Selection -->
+                        <div class="bg-gray-800 rounded-lg p-3 mb-6">
+                            <div class="flex items-center gap-3">
+                                <div class="w-3 h-3 bg-blue-400 rounded-full"></div>
+                                <span class="text-white font-medium">Carnegie Mellon Court</span>
+                            </div>
+                        </div>
+
+                        <!-- Traffic Level -->
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold mb-3">Traffic Level</h3>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm text-gray-400">Not Busy</span>
+                                <span class="text-sm text-gray-400">Moderate</span>
+                                <span class="text-sm text-gray-400">Busy</span>
+                            </div>
+                            <input type="range" min="0" max="2" value="1" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer slider">
+                        </div>
+
+                        <!-- Activity Details -->
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold mb-3">Activity Details</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="block text-sm text-gray-400 mb-1">PLAYERS</label>
+                                    <select class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white">
+                                        <option>Select players</option>
+                                        <option>1-2 players</option>
+                                        <option>3-4 players</option>
+                                        <option>5+ players</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-gray-400 mb-1">SKILL LEVEL</label>
+                                    <select class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white">
+                                        <option>Select skill level</option>
+                                        <option>Beginner</option>
+                                        <option>Intermediate</option>
+                                        <option>Advanced</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-gray-400 mb-1">AGES</label>
+                                    <select class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white">
+                                        <option>Select age range</option>
+                                        <option>18-25</option>
+                                        <option>26-35</option>
+                                        <option>36-45</option>
+                                        <option>45+</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-gray-400 mb-1">RUNSS</label>
+                                    <select class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white">
+                                        <option>Select runs</option>
+                                        <option>1 run</option>
+                                        <option>2-3 runs</option>
+                                        <option>4+ runs</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Invite Players -->
+                        <div class="mb-6">
+                            <button class="text-primary-green hover:text-secondary-green text-sm underline">INVITE PLAYERS</button>
+                        </div>
+
+                        <!-- Live Feed Post -->
+                        <div class="bg-gray-800 rounded-lg p-3 mb-6">
+                            <h3 class="text-lg font-semibold mb-3">POST TO YOUR LIVE FEED</h3>
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" class="w-4 h-4 text-primary-green bg-gray-800 border-gray-700 rounded focus:ring-primary-green">
+                                <span class="text-sm">SHARE WITH OTHER PLAYERS</span>
+                            </label>
+                        </div>
+
+                        <!-- Check In Button -->
+                        <button class="w-full bg-primary-green text-black px-6 py-3 text-lg font-medium rounded-lg hover:bg-secondary-green transition-colors">
+                            CHECK IN
+                        </button>
+                    </div>
+
+                    <!-- Bottom Navigation -->
+                    <div class="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 px-4 py-2 z-50">
+                        <div class="flex justify-around items-center max-w-md mx-auto">
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">🏠</div>
+                                <span class="text-xs mt-1">Home</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">🕐</div>
+                                <span class="text-xs mt-1">History</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 scale-110">
+                                <div class="text-2xl font-bold text-primary-green">G</div>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">📅</div>
+                                <span class="text-xs mt-1">Calendar</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">👤</div>
+                                <span class="text-xs mt-1">Profile</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getCourtDetailsHTML() {
+            return `
+                <div class="min-h-screen bg-black text-white pb-20">
+                    <!-- Header -->
+                    <div class="flex items-center justify-between px-4 py-3 bg-black border-b border-gray-800">
+                        <div class="flex items-center gap-3">
+                            <button class="text-white hover:text-primary-green transition-colors">←</button>
+                            <h1 class="text-white font-bold text-lg"></h1>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <button class="text-white hover:text-primary-green transition-colors">📤</button>
+                            <div class="text-white text-sm font-mono">11:01</div>
+                        </div>
+                    </div>
+                    
+                    <div class="px-4 py-4">
+                        <!-- Court Title -->
+                        <div class="mb-4">
+                            <h1 class="text-xl font-semibold">Main Court</h1>
+                            <div class="text-sm text-gray-400 flex items-center gap-2 mt-1">
+                                📍 761.3 km away • 15226 minutes
+                            </div>
+                        </div>
+
+                        <!-- Image Carousel -->
+                        <div class="mb-4">
+                            <div class="bg-gray-800 rounded-lg h-48 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="text-4xl mb-2">🏀</div>
+                                    <div class="text-sm text-gray-400">Basketball Court</div>
+                                </div>
+                            </div>
+                            <div class="flex justify-center gap-1 mt-2">
+                                <div class="w-2 h-2 bg-primary-green rounded-full"></div>
+                                <div class="w-2 h-2 bg-gray-600 rounded-full"></div>
+                                <div class="w-2 h-2 bg-gray-600 rounded-full"></div>
+                            </div>
+                        </div>
+
+                        <!-- Court Info -->
+                        <div class="mb-4">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="text-lg">🏀</span>
+                                <span class="font-medium">Basketball court</span>
+                            </div>
+                            <div class="text-sm text-gray-400">Last updated: 37d ago</div>
+                        </div>
+
+                        <!-- Traffic Section -->
+                        <div class="bg-gray-800 rounded-lg p-3 mb-4">
+                            <h3 class="text-lg font-semibold mb-3">Traffic</h3>
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="text-gray-400">Unknown</span>
+                                <span class="text-gray-400">ℹ️</span>
+                            </div>
+                            <div class="w-full bg-gray-700 rounded-full h-2">
+                                <div class="bg-primary-green h-2 rounded-full" style="width: 10%"></div>
+                            </div>
+                            <div class="text-sm text-gray-400 mt-1">Traffic level: 10%</div>
+                        </div>
+
+                        <!-- Capacity Section -->
+                        <div class="bg-gray-800 rounded-lg p-3 mb-4">
+                            <h3 class="text-lg font-semibold mb-3">Capacity</h3>
+                            <div class="flex items-center gap-2">
+                                <span class="text-gray-400">0 / 300 players</span>
+                                <span class="text-gray-400">ℹ️</span>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex gap-3 mb-6">
+                            <button class="flex-1 border border-primary-green text-primary-green px-4 py-2 rounded-lg hover:bg-primary-green hover:text-black transition-colors">Report Status</button>
+                            <button class="flex-1 bg-primary-green text-black px-4 py-2 rounded-lg hover:bg-secondary-green transition-colors">→ Check in</button>
+                        </div>
+
+                        <!-- Calendar Section -->
+                        <div class="bg-gray-800 rounded-lg p-3">
+                            <h3 class="text-lg font-semibold mb-3">Calendar (Testing)</h3>
+                            <div class="text-gray-400 text-sm">No upcoming events scheduled</div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Navigation -->
+                    <div class="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 px-4 py-2 z-50">
+                        <div class="flex justify-around items-center max-w-md mx-auto">
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-primary-green">
+                                <div class="text-2xl">🏠</div>
+                                <span class="text-xs mt-1">Home</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">🕐</div>
+                                <span class="text-xs mt-1">History</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 scale-110">
+                                <div class="text-2xl font-bold text-primary-green">G</div>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">📅</div>
+                                <span class="text-xs mt-1">Calendar</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">👤</div>
+                                <span class="text-xs mt-1">Profile</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getCreateHTML() {
+            return `
+                <div class="min-h-screen bg-black text-white pb-20">
+                    <!-- Header -->
+                    <div class="flex items-center justify-between px-4 py-3 bg-black border-b border-gray-800">
+                        <div class="flex items-center gap-3">
+                            <h1 class="text-white font-bold text-lg">CREATE</h1>
+                        </div>
+                        <div class="text-white text-sm font-mono">9:41</div>
+                    </div>
+                    
+                    <div class="px-4 py-6">
+                        <!-- User Profile -->
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center">👤</div>
+                            <div>
+                                <div class="font-medium">Player Name</div>
+                                <div class="text-sm text-gray-400">Public</div>
+                            </div>
+                        </div>
+
+                        <!-- Text Input -->
+                        <div class="mb-6">
+                            <textarea placeholder="Share to your live feed" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-primary-green resize-none" rows="4"></textarea>
+                        </div>
+
+                        <!-- Create Options -->
+                        <div class="space-y-3">
+                            <button class="w-full flex items-center gap-4 p-3 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors">
+                                <span class="text-2xl">👥</span>
+                                <span class="font-medium text-primary-green">Create New Group</span>
+                            </button>
+                            <button class="w-full flex items-center gap-4 p-3 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors">
+                                <span class="text-2xl">📷</span>
+                                <span class="font-medium text-primary-green">Photo or Video</span>
+                            </button>
+                            <button class="w-full flex items-center gap-4 p-3 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors">
+                                <span class="text-2xl">📍</span>
+                                <span class="font-medium text-primary-green">Check In</span>
+                            </button>
+                            <button class="w-full flex items-center gap-4 p-3 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors">
+                                <span class="text-2xl">👤</span>
+                                <span class="font-medium text-primary-green">Tag Friends</span>
+                            </button>
+                            <button class="w-full flex items-center gap-4 p-3 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors">
+                                <span class="text-2xl">📸</span>
+                                <span class="font-medium text-primary-green">Camera</span>
+                            </button>
+                            <button class="w-full flex items-center gap-4 p-3 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors">
+                                <span class="text-2xl">📅</span>
+                                <span class="font-medium text-primary-green">Share Event</span>
+                            </button>
+                            <button class="w-full flex items-center gap-4 p-3 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors">
+                                <span class="text-2xl">👥</span>
+                                <span class="font-medium text-primary-green">Invite Friends</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Navigation -->
+                    <div class="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 px-4 py-2 z-50">
+                        <div class="flex justify-around items-center max-w-md mx-auto">
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">🏠</div>
+                                <span class="text-xs mt-1">Home</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">🕐</div>
+                                <span class="text-xs mt-1">History</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 scale-110">
+                                <div class="text-2xl font-bold text-primary-green">G</div>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">📅</div>
+                                <span class="text-xs mt-1">Calendar</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">👤</div>
+                                <span class="text-xs mt-1">Profile</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getGIAHTML() {
+            return `
+                <div class="min-h-screen bg-black text-white pb-20">
+                    <!-- Header -->
+                    <div class="flex items-center justify-between px-4 py-3 bg-black border-b border-gray-800">
+                        <h1 class="text-white font-bold text-lg">GOODRUNSS</h1>
+                        <div class="text-white text-sm font-mono">9:41</div>
+                    </div>
+                    
+                    <div class="flex flex-col h-full px-4 py-6">
+                        <!-- Chat Area -->
+                        <div class="flex-1 mb-4 space-y-4 overflow-y-auto">
+                            <div class="flex justify-start">
+                                <div class="max-w-xs px-4 py-2 rounded-lg bg-gray-800 text-white">
+                                    <div class="text-sm">Hi ! It's GIA how may I assist you?</div>
+                                    <div class="text-xs mt-1 text-gray-400">9:41</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Suggested Query -->
+                        <div class="mb-4">
+                            <button class="text-primary-green hover:text-secondary-green text-sm underline">PICKLEBALL TOMORROW?</button>
+                        </div>
+
+                        <!-- Input Area -->
+                        <div class="flex gap-2">
+                            <input type="text" placeholder="Ask GIA anything..." class="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-primary-green">
+                            <button class="bg-primary-green text-black p-3 rounded-lg hover:bg-secondary-green transition-colors">🎤</button>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Navigation -->
+                    <div class="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 px-4 py-2 z-50">
+                        <div class="flex justify-around items-center max-w-md mx-auto">
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">🏠</div>
+                                <span class="text-xs mt-1">Home</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">🕐</div>
+                                <span class="text-xs mt-1">History</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 scale-110">
+                                <div class="text-2xl font-bold text-primary-green">G</div>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-gray-400 hover:text-gray-300">
+                                <div class="text-2xl">📅</div>
+                                <span class="text-xs mt-1">Calendar</span>
+                            </button>
+                            <button class="flex flex-col items-center justify-center py-2 px-3 text-primary-green">
+                                <div class="text-2xl">👤</div>
+                                <span class="text-xs mt-1">Profile</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Interactive features
+        function addInteractiveFeatures() {
+            // Add click animations to buttons
+            document.addEventListener('click', function(e) {
+                if (e.target.tagName === 'BUTTON') {
+                    e.target.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        e.target.style.transform = '';
+                    }, 150);
+                }
+            });
+
+            // Add hover effects to cards
+            document.addEventListener('mouseover', function(e) {
+                if (e.target.closest('.bg-gray-800')) {
+                    e.target.closest('.bg-gray-800').classList.add('hover-glow');
+                }
+            });
+
+            document.addEventListener('mouseout', function(e) {
+                if (e.target.closest('.bg-gray-800')) {
+                    e.target.closest('.bg-gray-800').classList.remove('hover-glow');
+                }
+            });
+
+            // Simulate real-time updates
+            setInterval(updateLiveData, 5000);
+        }
+
+        function updateLiveData() {
+            // Update live activity feed with new entries
+            const liveIndicators = document.querySelectorAll('.animate-pulse');
+            liveIndicators.forEach(indicator => {
+                indicator.style.animation = 'none';
+                setTimeout(() => {
+                    indicator.style.animation = 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite';
+                }, 100);
+            });
+
+            // Update performance metrics
+            const performanceValues = document.querySelectorAll('.text-3xl.font-bold.text-white');
+            performanceValues.forEach(value => {
+                if (value.textContent.includes('%')) {
+                    const currentValue = parseInt(value.textContent);
+                    const newValue = currentValue + Math.floor(Math.random() * 3) - 1;
+                    value.textContent = Math.max(0, Math.min(100, newValue)) + '%';
+                }
+            });
+        }
+
+        function addNotificationSystem() {
+            // Create notification container
+            const notificationContainer = document.createElement('div');
+            notificationContainer.id = 'notifications';
+            notificationContainer.className = 'fixed top-4 right-4 z-50 space-y-2';
+            document.body.appendChild(notificationContainer);
+
+            // Show notification function
+            window.showNotification = function(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `bg-gray-800 border-l-4 p-4 rounded-lg shadow-lg animate-slide-in ${
+                    type === 'success' ? 'border-primary-green' : 
+                    type === 'error' ? 'border-red-400' : 
+                    type === 'warning' ? 'border-yellow-400' : 'border-blue-400'
+                }`;
+                
+                notification.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="text-lg">${type === 'success' ? '✅' : type === 'error' ? '❌' : type === 'warning' ? '⚠️' : 'ℹ️'}</div>
+                        <div class="text-white text-sm">${message}</div>
+                        <button onclick="this.parentElement.parentElement.remove()" class="text-gray-400 hover:text-white ml-auto">×</button>
+                    </div>
+                `;
+                
+                notificationContainer.appendChild(notification);
+                
+                // Auto remove after 5 seconds
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.remove();
+                    }
+                }, 5000);
+            };
+
+            // Simulate notifications
+            setTimeout(() => {
+                showNotification('New court available near you!', 'success');
+            }, 2000);
+
+            setTimeout(() => {
+                showNotification('Your group session starts in 15 minutes', 'warning');
+            }, 5000);
+        }
+
+        function addDataVisualization() {
+            // Animate progress bars
+            const progressBars = document.querySelectorAll('[style*="width:"]');
+            progressBars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.transition = 'width 1s ease-out';
+                    bar.style.width = width;
+                }, 500);
+            });
+
+            // Animate charts
+            const chartBars = document.querySelectorAll('.bg-primary-green, .bg-blue-400, .bg-red-400');
+            chartBars.forEach((bar, index) => {
+                const height = bar.style.height;
+                bar.style.height = '0';
+                setTimeout(() => {
+                    bar.style.transition = 'height 0.8s ease-out';
+                    bar.style.height = height;
+                }, index * 100);
+            });
+        }
+
+        // Initialize the app
+        updateContent();
+        addEventListeners();
+        addInteractiveFeatures();
+        addNotificationSystem();
+        addDataVisualization();
+    </script>
+</body>
+</html>
