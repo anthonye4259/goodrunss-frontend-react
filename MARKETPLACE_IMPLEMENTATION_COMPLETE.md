@@ -161,3 +161,4 @@ All marketplace and floating GIA features are fully implemented and ready to use
 
 **Built with:** Next.js 15, React 19, TypeScript, Tailwind CSS 4, Lucide React
 
+
