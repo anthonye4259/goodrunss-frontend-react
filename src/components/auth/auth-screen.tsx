@@ -1,4 +1,3 @@
-// components/auth/auth-screen.tsx
 "use client"
 
 import type React from "react"
@@ -18,59 +17,16 @@ export function AuthScreen() {
     password: "",
   })
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8001"
-    
-    try {
-      const endpoint = isLogin ? "/oauth/login" : "/oauth/register"
-      const payload = isLogin 
-        ? { email: formData.email, password: formData.password }
-        : { email: formData.email, password: formData.password, full_name: formData.name }
-      
-      const response = await fetch(`${API_URL}${endpoint}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      })
-      
-      const data = await response.json()
-      
-      if (response.ok && data.token) {
-        // Store token
-        localStorage.setItem("auth_token", data.token)
-        localStorage.setItem("user", JSON.stringify(data.user))
-        
-        // Redirect to player dashboard
-        window.location.href = "/mobile/player"
-      } else {
-        alert(data.detail || "Authentication failed. Please try again.")
-      }
-    } catch (error) {
-      console.error("Auth error:", error)
-      alert("Failed to authenticate. Please try again.")
-    }
+    // Redirect to onboarding instead of directly to player page
+    window.location.href = "/mobile/onboarding"
   }
 
-  const handleOAuthLogin = async (provider: "google" | "apple") => {
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8001"
-    
-    try {
-      // Get OAuth authorization URL from backend
-      const response = await fetch(`${API_URL}/oauth/${provider}/login`)
-      const data = await response.json()
-      
-      if (data.authorization_url) {
-        // Redirect to OAuth provider
-        window.location.href = data.authorization_url
-      } else if (data.demo_mode) {
-        // Apple not configured yet - show message
-        alert("Apple Sign-In coming soon! For now, use Google or email/password.")
-      }
-    } catch (error) {
-      console.error(`OAuth error:`, error)
-      alert(`Failed to connect with ${provider}. Please try again.`)
-    }
+  const handleOAuthLogin = (provider: "google" | "apple") => {
+    console.log(`[v0] Logging in with ${provider}`)
+    // Redirect to onboarding instead of directly to player page
+    window.location.href = "/mobile/onboarding"
   }
 
   return (
@@ -263,5 +219,3 @@ export function AuthScreen() {
     </div>
   )
 }
-
-

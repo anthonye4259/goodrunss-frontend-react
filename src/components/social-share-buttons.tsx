@@ -1,4 +1,3 @@
-// components/social-share-buttons.tsx
 "use client"
 
 import { Button } from "@/components/ui/button"
@@ -132,5 +131,3 @@ export function SocialShareButtons({ text, url = "", size = "md", showLabels = t
     </div>
   )
 }
-
-
